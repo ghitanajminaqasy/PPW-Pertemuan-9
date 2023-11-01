@@ -14,4 +14,8 @@ class PreventRequestsDuringMaintenance extends Middleware
     protected $except = [
         //
     ];
+
+    public function _construct(){
+        $this->middleware('auth');
+    }
 }

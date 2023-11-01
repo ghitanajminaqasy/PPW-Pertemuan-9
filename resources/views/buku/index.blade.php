@@ -25,11 +25,17 @@
                     <a style="left: right; margin-bottom: 16px" href="{{ route('buku.create') }}">
                         <button class="btn btn-success"><i class="fa-solid fa-plus"></i>&nbsp;Tambah Buku</button>
                     </a>
+
+                    @if(Auth::check() && Auth::user()->role == 'admin')
+                   
                     <form action="{{ route('buku.search') }}" method="get">
                         @csrf
                         <input type="text" name="kata" class="form form-control" placeholder="Cari ..." style="float:right;">
                     </form>
+                    @endif
+
                 </div>
+
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
