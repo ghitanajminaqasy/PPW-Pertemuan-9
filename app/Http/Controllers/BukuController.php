@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Image;
 use App\Models\Buku;
+use App\Models\Gallery;
 
 class bukuController extends Controller
 {
@@ -46,18 +48,27 @@ class bukuController extends Controller
             'tgl_terbit.date' => 'Kolom tanggal terbit harus berisi tanggal yang valid.',
         ];
         
-        // $this->validate($request, [
-        //     'judul' => 'required|string',
-        //     'penulis' => 'required|string|max:30',
-        //     'harga' => 'required|numeric',
-        //     'tgl_terbit' => 'required|date',
-        // ], $customMessages);
 
         $buku = new Buku;
         $buku->judul = $request->judul;
         $buku->penulis = $request->penulis;
         $buku->harga = $request->harga;
         $buku->tgl_terbit = $request->tgl_terbit;
+
+        if ($request->file('gallery')) {
+            foreach($request->file('gallery') as $key => $file) {
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $filePath = $file->storeAs('uploads', $fileName, 'public');
+
+                $gallery = Gallery::create([
+                    'nama_galeri'   => $fileName,
+                    'path'          => '/storage/' . $filePath,
+                    'foto'          => $fileName,
+                    'buku_id'       => $id
+                ]);
+            }
+        }
+        
         $buku->save();
         return redirect('/buku')->with('pesan', 'Data Buku Berhasil Disimpan');
     
@@ -77,7 +88,7 @@ class bukuController extends Controller
     public function edit(string $id)
     {
         $buku = Buku::find($id);
-        return view('edit', compact('buku'));
+        return view('buku.edit', compact('buku'));
    
     }
 
@@ -103,16 +114,44 @@ class bukuController extends Controller
             'penulis' => 'required|string|max:30',
             'harga' => 'required|numeric',
             'tgl_terbit' => 'required|date',
+            'thumbnail' => 'image|mimes:jpeg,jpg,png'
         ], $customMessages);
 
         $buku = Buku::find($id);
+        // $request->validate([
+        //     'thumbnail' => 'image|mimes:jpeg,jpg,png'
+        // ]);
+
+        $fileName = time().'_'.$request->thumbnail->getClientOriginalName();
+        $filePath = $request->file('thumbnail')->storeAs('uploads', $fileName, 'public');
+
+        Image::make(storage_path().'/app/public/uploads/'.$fileName)
+            ->fit(240,320)
+            ->save();
+
         $buku->update([
             'judul' => $request->judul,
             'penulis' => $request->penulis,
             'harga' => $request->harga,
             'tgl_terbit' => $request->tgl_terbit,
+            'filename'  => $fileName,
+            'filepath'  => '/storage/' . $filePath
         ]);
-        return redirect('/buku')->with('pesan', 'Data Buku Berhasil Disimpan');
+        if ($request->file('gallery')) {
+            foreach($request->file('gallery') as $key => $file) {
+                $fileName = time().'_'.$file->getClientOriginalName();
+                $filePath = $file->storeAs('uploads', $fileName, 'public');
+
+                $gallery = Gallery::create([
+                    'nama_galeri'   => $fileName,
+                    'path'          => '/storage/' . $filePath,
+                    'foto'          => $fileName,
+                    'buku_id'       => $id
+                ]);
+            }
+        }
+
+        return redirect('/buku')->with('pesan', 'Data Buku Berhasil Di simpan');
    
     }
 

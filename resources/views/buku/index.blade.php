@@ -44,17 +44,45 @@
                             <th>Penulis</th>
                             <th>Harga</th>
                             <th>Tgl. Terbit</th>
+                            <th>Foto</th>
                             <th>Aksi</th>   
                         </tr>
                     </thead>
                     <tbody>
                     @foreach($data_buku as $buku)
+                    
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $buku->judul }}</td>
                                 <td>{{ $buku->penulis }}</td>
                                 <td>{{ "Rp ".number_format($buku->harga, 0, ',', '.') }}</td>
                                 <td>{{ ($buku->tgl_terbit)->format('d/m/Y') }}</td>
+                                <td>
+                                    
+                                @if ( $buku->filepath )
+                                <div class="relative h-10 w-10">
+                                    <img
+                                    class="h-50 w-50 object-cover object-center"
+                                    src="{{ asset($buku->filepath) }}"
+                                    alt=""
+                                    />
+                                </div>
+                                @endif
+
+                                <div class="gallery_items">
+                                 @foreach($buku->galleries()->get() as $gallery)
+                                 <div class="gallery_item">
+                                <img
+                                class="rounded-full object-cover object-center"
+                                src="{{ asset($gallery->path) }}"
+                                alt=""
+                                width="400"
+                                />
+                            </div>
+                        @endforeach
+                    </div>
+
+                                </td>
                                 <td>
                                     <div class="btn-group" role="group" style="overflow-x: auto;">
                                         <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i>&nbsp;Edit</a>
@@ -65,7 +93,6 @@
                                         </form>
                                     </div>
                                 </td>
-                                
                             </tr>
                     @endforeach
                     </tbody>
