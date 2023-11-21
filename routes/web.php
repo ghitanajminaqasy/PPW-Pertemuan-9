@@ -41,3 +41,5 @@ Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search
 
 require __DIR__.'/auth.php';
 
+Route::get('/detail-buku/{title}', 'BukuController@galbuku')->name('galeri.buku');
+

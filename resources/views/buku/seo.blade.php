@@ -10,9 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.18.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-nU14brUcp6StFntEOOEBvcJm4huWjB0OcIeQ3fltAfSmuZFrkAif0T+UtNGlKKQv" crossorigin="anonymous">
     <title>Buku</title>
+    <link href="{{ asset('dist/css/lightbox.min.css') }}" rel="stylesheet">
 </head>
 
 <body>
+<script src="{{ asset('dist/js/lightbox-plus-jquery.min.js') }}"></script>
 
 <div class="container" style="margin-top: 16px">
     <div class="col-md-12">
@@ -123,9 +125,6 @@
                 <div>{{ $galeris->links() }}</div>
             </div>
         </section>
-
-        
     </div>
-
-    </body>
+</body>
 </x-app-layout>

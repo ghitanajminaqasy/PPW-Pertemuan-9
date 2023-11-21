@@ -175,4 +175,10 @@ class bukuController extends Controller
         $no = 1 + ($batas * ($data_buku->currentPage() - 1));
         return view('search', compact('data_buku','no', 'jumlah_buku', 'cari'));
     }
+
+    public function galbuku($title){
+        $bungkus = Buku::where('buku_seo', $title)->first();
+        $galeris = $buku->photos()->orderBy('id', 'desc')->paginate(6);
+        return view('galeri-buku', compact('$bukus', 'galeris'));
+    }
 }
